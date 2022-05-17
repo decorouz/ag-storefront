@@ -1,0 +1,6 @@
+#pipenv
+
+Pipfile.lock
+
+# Sqlite Database
+db.sqlite3
