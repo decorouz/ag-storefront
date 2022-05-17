@@ -1,20 +1,31 @@
-from unicodedata import category
 from django.db import models
 
 # Create your models here.
 
 
 class Collection(models.Model):
-    title =  models.CharField(max_length=255) 
+    title = models.CharField(max_length=255)
+    featured_product = models.ForeignKey(
+        "Product", on_delete=models.SET_NULL, null=True, related_name="+"
+    )
+
+
+class Promotion(models.Model):
+    description = models.CharField(max_length=255)
+    discount = models.FloatField()
+    # product_set
+
 
 class Product(models.Model):
-    title =  models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
     inventory = models.IntegerField()
     last_updated = models.DateTimeField(auto_now=True)
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
-
+    promotions = models.ManyToManyField(
+        Promotion
+    )  # products can have more than one promotions
 
 
 class Customer(models.Model):
@@ -29,17 +40,18 @@ class Customer(models.Model):
     ]
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    email = models.EmailField(max_length= 255, unique=True)
+    email = models.EmailField(max_length=255, unique=True)
     phone = models.CharField(max_length=20)
     birth_date = models.DateField(null=True)
-    membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
+    membership = models.CharField(
+        max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE
+    )
 
 
 class Order(models.Model):
     PAYMENT_STATUS_PENDING = "P"
     PAYMENT_STATUS_COMPLETE = "C"
     PAYMENT_STATUS_FAILED = "F"
-
 
     PAYMENT_CHOICES = [
         (PAYMENT_STATUS_PENDING, "Pending"),
@@ -48,14 +60,16 @@ class Order(models.Model):
     ]
 
     placed_at = models.DateTimeField(auto_now_add=True)
-    payment_status = models.CharField(max_length=1, choices=PAYMENT_CHOICES, default=PAYMENT_STATUS_PENDING)
+    payment_status = models.CharField(
+        max_length=1, choices=PAYMENT_CHOICES, default=PAYMENT_STATUS_PENDING
+    )
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
+
 
 class Address(models.Model):
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
-    customer =  models.ForeignKey(
-        Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
 
 class OrderItem(models.Model):
@@ -64,8 +78,10 @@ class OrderItem(models.Model):
     quantity = models.PositiveSmallIntegerField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
 
+
 class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
+
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
