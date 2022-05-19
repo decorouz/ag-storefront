@@ -20,5 +20,6 @@ admin.site.site_header = "Store Front Admin"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("store/", include("store.urls")),
     path("__debug__/", include("debug_toolbar.urls")),
 ]
