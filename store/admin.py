@@ -22,6 +22,8 @@ class InventoryFilter(admin.SimpleListFilter):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ["title"]}
+    autocomplete_fields = ["collection"]
     actions = ["clear_inventory"]
     list_display = ["title", "unit_price", "inventory_status", "collection_title"]
     list_editable = ["unit_price"]
@@ -78,6 +80,7 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(Collection)
 class CollectionAdmin(admin.ModelAdmin):
     list_display = ["title", "products_count"]
+    search_fields = ["title"]
 
     @admin.display(ordering="products_count")
     def products_count(self, collection):
