@@ -8,7 +8,7 @@ class TaggedItemManager(models.Manager):
         content_type = ContentType.objects.get_for_model(obj_type)
 
         return TaggedItem.objects.select_related("tag").filter(
-            target_ct=content_type, target_id=obj_id
+            content_type=content_type, object_id=obj_id
         )
 
 
@@ -16,11 +16,19 @@ class TaggedItemManager(models.Manager):
 class Tag(models.Model):
     label = models.CharField(max_length=255)
 
+    def __str__(self) -> str:
+        return self.label
+
 
 class TaggedItem(models.Model):
     # Type -> Product, Video, Project, Blog Post, Course
     objects = TaggedItemManager()
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
-    target_ct = models.ForeignKey(ContentType, on_delete=models.CASCADE)  # content type
-    target_id = models.PositiveIntegerField()  # object id
-    target = GenericForeignKey("target_ct", "target_id")  # content object
+    content_type = models.ForeignKey(
+        ContentType, on_delete=models.CASCADE
+    )  # content type
+    object_id = models.PositiveIntegerField()  # object id
+    content_object = GenericForeignKey("content_type", "object_id")  # content object
+
+    def __str__(self) -> str:
+        return str(self.tag)

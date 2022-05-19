@@ -1,6 +1,7 @@
 from urllib.parse import urlencode
 
 from django.contrib import admin, messages
+from django.contrib.contenttypes.admin import GenericTabularInline
 from django.db.models import Count
 from django.urls import reverse
 from django.utils.html import format_html
@@ -22,7 +23,6 @@ class InventoryFilter(admin.SimpleListFilter):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ["title"]}
     autocomplete_fields = ["collection"]
     actions = ["clear_inventory"]
     list_display = ["title", "unit_price", "inventory_status", "collection_title"]
@@ -30,6 +30,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ["collection", "last_updated", InventoryFilter]
     list_per_page = 10
     list_select_related = ["collection"]
+    prepopulated_fields = {"slug": ["title"]}
     search_fields = ["product"]
 
     def collection_title(self, product):
