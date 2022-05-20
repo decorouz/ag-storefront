@@ -8,13 +8,24 @@ from .models import Collection, Product
 class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collection
-        fields = ("id", "title")
+        fields = ("id", "title", "products_count")
+
+    products_count = serializers.IntegerField()
 
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ("id", "title", "unit_price", "price_with_tax", "collection")
+        fields = (
+            "id",
+            "title",
+            "slug",
+            "description",
+            "unit_price",
+            "price_with_tax",
+            "inventory",
+            "collection",
+        )
 
     price_with_tax = serializers.SerializerMethodField(method_name="calculate_tax")
 
