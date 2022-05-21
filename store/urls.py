@@ -1,6 +1,3 @@
-from cgitb import lookup
-
-from django.urls import path
 from rest_framework_nested import routers
 
 from . import views
@@ -15,5 +12,5 @@ product_router = routers.NestedDefaultRouter(router, "products", lookup="product
 product_router.register("reviews", views.ReviewViewSet, basename="product-reviews")
 
 
-# URLConf  
+# URLConf
 urlpatterns = router.urls + product_router.urls
