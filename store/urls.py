@@ -1,3 +1,5 @@
+from cgitb import lookup
+
 from rest_framework_nested import routers
 
 from . import views
@@ -13,5 +15,9 @@ product_router = routers.NestedDefaultRouter(router, "products", lookup="product
 product_router.register("reviews", views.ReviewViewSet, basename="product-reviews")
 
 
+cart_router = routers.NestedDefaultRouter(router, "carts", lookup="cart")
+cart_router.register("items", views.CartItemViewSet, basename="cart-items")
+
+
 # URLConf
-urlpatterns = router.urls + product_router.urls
+urlpatterns = router.urls + product_router.urls + cart_router.urls
