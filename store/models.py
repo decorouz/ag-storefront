@@ -112,6 +112,9 @@ class Order(models.Model):
     )
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
+    class Meta:
+        permissions = [("cancel_order", "Can cancel order")]
+
     def __str__(self) -> str:
         return self.payment_status
 
