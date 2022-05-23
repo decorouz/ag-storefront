@@ -1,6 +1,8 @@
-from enum import unique
+from datetime import date
 from uuid import uuid4
 
+from django.conf import settings
+from django.contrib import admin
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -59,20 +61,32 @@ class Customer(models.Model):
         (MEMBERSHIP_SILVER, "Silver"),
         (MEMBERSHIP_GOLD, "Gold"),
     ]
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.EmailField(max_length=255, unique=True)
     phone = models.CharField(max_length=20)
-    birth_date = models.DateField(null=True)
+    birth_date = models.DateField(verbose_name=("Birthday"), null=True)
     membership = models.CharField(
         max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE
     )
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    @admin.display(ordering="user__firstname")
+    def first_name(self) -> str:
+        return self.user.first_name
+
+    @admin.display(ordering="user__last_name")
+    def last_name(self):
+        return self.user.last_name
+
+    def age(self):
+        today = date.today()
+        born_date = self.birth_date
+        rest = 1 if (today.month, today.day) < (born_date.month, born_date.day) else 0
+        return today.year - born_date.year - rest
 
     def __str__(self) -> str:
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.user.first_name} {self.user.last_name} "
 
     class Meta:
-        ordering = ["first_name", "last_name"]
+        ordering = ["user__first_name", "user__last_name"]
 
 
 class Address(models.Model):
