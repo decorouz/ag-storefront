@@ -9,7 +9,7 @@ class Command(BaseCommand):
     help: str = "Populates the database with collections and products"
 
     def handle(self, *args, **options):
-        print("Populating the datbase...")
+        print("Populating the database...")
         current_dir = os.path.dirname(__file__)
         file_path = os.path.join(current_dir, "seed.sql")
         sql = Path(file_path).read_text()
