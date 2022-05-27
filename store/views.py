@@ -18,7 +18,11 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
-from store.permissions import FullDjangoModelPermission, IsAdminOrReadOnly
+from store.permissions import (
+    FullDjangoModelPermission,
+    IsAdminOrReadOnly,
+    ViewCustomerHistoryPermission,
+)
 
 from .filters import ProductFilter
 from .models import Cart, CartItem, Collection, Customer, OrderItem, Product, Review
@@ -130,6 +134,11 @@ class CustomerViewSet(ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
     permission_classes = [IsAdminUser]
+
+    @action(detail=True, permission_classes=[ViewCustomerHistoryPermission])
+    def history(self, request, pk):
+        """To view the history of a particular customer"""
+        return Response("ok")
 
     @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAuthenticated])
     def me(self, request):
