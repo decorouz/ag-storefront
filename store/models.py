@@ -113,7 +113,9 @@ class Order(models.Model):
     payment_status = models.CharField(
         max_length=1, choices=PAYMENT_CHOICES, default=PAYMENT_STATUS_PENDING
     )
-    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
+    customer = models.ForeignKey(
+        Customer, on_delete=models.PROTECT, related_name="orders"
+    )
 
     class Meta:
         permissions = [("cancel_order", "Can cancel order")]
@@ -123,7 +125,7 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.PROTECT)
+    order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name="items")
     product = models.ForeignKey(
         Product, on_delete=models.PROTECT, related_name="orderitems"
     )
