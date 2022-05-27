@@ -54,7 +54,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ["first_name", "last_name", "membership", "orders_count"]
+    list_display = ["first_name", "last_name", "membership", "orders"]
     list_editable = ["membership"]
     list_per_page = 10
     list_select_related = ["user"]
@@ -62,7 +62,7 @@ class CustomerAdmin(admin.ModelAdmin):
     search_fields = ["first_name__istartswith", "last_name__istartswith"]
 
     @admin.display(ordering="orders_count")
-    def orders_count(self, customer):
+    def orders(self, customer):
         url = (
             reverse("admin:store_order_changelist")
             + "?"
@@ -71,7 +71,7 @@ class CustomerAdmin(admin.ModelAdmin):
         return format_html('<a href="{}">{} Orders</a>', url, customer.orders_count)
 
     def get_queryset(self, request):
-        return super().get_queryset(request).annotate(orders_count=Count("order"))
+        return super().get_queryset(request).annotate(orders_count=Count("orders"))
 
 
 class OrderItemInline(admin.TabularInline):
