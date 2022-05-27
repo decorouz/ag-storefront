@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django.db import transaction
 from rest_framework import serializers
 
 from .models import (
@@ -12,6 +13,7 @@ from .models import (
     Product,
     Review,
 )
+from .signals import order_created
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -166,27 +168,31 @@ class CreateOrderSerializer(serializers.Serializer):
         return cart_id
 
     def save(self, **kwargs):
-        cart_id = self.validated_data["cart_id"]
+        with transaction.atomic():
 
-        (customer, created) = Customer.objects.get_or_create(
-            user_id=self.context["user_id"]
-        )
-        order = Order.objects.create(customer=customer)
+            cart_id = self.validated_data["cart_id"]
 
-        cart_items = CartItem.objects.select_related("product").filter(cart_id=cart_id)
-        print([item for item in cart_items])
-        # Convert cartitems to order items
-        order_items = [
-            OrderItem(
-                order=order,
-                product=item.product,
-                unit_price=item.product.unit_price,
-                quantity=item.quantity,
+            customer = Customer.objects.get(user_id=self.context["user_id"])
+            order = Order.objects.create(customer=customer)
+
+            cart_items = CartItem.objects.select_related("product").filter(
+                cart_id=cart_id
             )
-            for item in cart_items
-        ]
+            print([item for item in cart_items])
+            # Convert cartitems to order items
+            order_items = [
+                OrderItem(
+                    order=order,
+                    product=item.product,
+                    unit_price=item.product.unit_price,
+                    quantity=item.quantity,
+                )
+                for item in cart_items
+            ]
 
-        # Now we need to save them
-        OrderItem.objects.bulk_create(order_items)
+            # Now we need to save them
+            OrderItem.objects.bulk_create(order_items)
 
-        Cart.objects.filter(pk=cart_id).delete()
+            Cart.objects.filter(pk=cart_id).delete()
+
+            order_created.send_robust(self.__class__, order=order)
