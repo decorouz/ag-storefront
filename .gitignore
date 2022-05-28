@@ -1,6 +1,10 @@
 #pipenv
 
 Pipfile.lock
+Pipfile
 
 # Sqlite Database
 db.sqlite3
+doc.txt
+
+Media/
