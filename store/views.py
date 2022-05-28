@@ -55,7 +55,7 @@ from .serializers import (
 
 
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.prefetch_related("images").all()
     serializer_class = ProductSerializer
     filter_backends = [
         DjangoFilterBackend,
@@ -205,7 +205,7 @@ class ProductImageViewSet(ModelViewSet):
     serializer_class = ProductImageSerializer
 
     def get_serializer_context(self):
-        
+
         return {"product_id": self.kwargs["product_pk"]}
 
     def get_queryset(self):
