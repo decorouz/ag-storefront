@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 
@@ -182,3 +183,11 @@ EMAIL_HOST_USER = ""
 EMAIL_HOST_PASSWORD = ""
 EMAIL_PORT = 2525
 DEFAULT_FROM_EMAIL = "from@agdev.com"
+
+
+# CELERY STUFF
+CELERY_BROKER_URL = "redis://localhost:6379/1"  # 1 is the name of our db
+
+
+if "celery" in sys.argv[0]:
+    DEBUG = False
