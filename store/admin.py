@@ -6,7 +6,7 @@ from django.db.models import Count
 from django.urls import reverse
 from django.utils.html import format_html
 
-from store.models import Collection, Customer, Order, OrderItem, Product
+from store.models import Collection, Customer, Order, OrderItem, Product, ProductImage
 
 
 class InventoryFilter(admin.SimpleListFilter):
@@ -21,10 +21,22 @@ class InventoryFilter(admin.SimpleListFilter):
             return queryset.filter(inventory__lt=10)
 
 
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    readonly_fields = ["thumbnail"]
+
+    def thumbnail(self, instance):
+        # print(instance)
+        if instance.image.name != "":
+            return format_html(f"<img src='{instance.image.url}' class='thumbnail'/>")
+        return ""
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     autocomplete_fields = ["collection"]
     actions = ["clear_inventory"]
+    inlines = [ProductImageInline]
     list_display = ["title", "unit_price", "inventory_status", "collection_title"]
     list_editable = ["unit_price"]
     list_filter = ["collection", "last_updated", InventoryFilter]
@@ -50,6 +62,9 @@ class ProductAdmin(admin.ModelAdmin):
             f"{updated_count} products were succcesfully updated",
             messages.ERROR,
         )
+
+    class Media:
+        css = {"all": ["store/styles.css"]}
 
 
 @admin.register(Customer)
