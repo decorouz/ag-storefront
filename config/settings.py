@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "djoser",
     "django_filters",
     "debug_toolbar",
+    "playground",
     "core",
     "tags",
     "store",
