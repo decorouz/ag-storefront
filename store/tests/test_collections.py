@@ -1,5 +1,6 @@
 import pytest
 from django.contrib.auth.models import User
+from model_bakery import baker
 from rest_framework import status
 
 
@@ -25,7 +26,7 @@ class TestCreateCollection:
         response = create_collection({"title": "a"})
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-    def test_if_user_is_nit_admin_return_403(self, create_collection, authenticate):
+    def test_if_user_is_not_admin_return_403(self, create_collection, authenticate):
         authenticate()
 
         response = create_collection({"title": "a"})
@@ -46,3 +47,26 @@ class TestCreateCollection:
         response = create_collection({"title": "a"})
         assert response.status_code == status.HTTP_201_CREATED
         assert response.data["id"] > 0
+
+
+@pytest.mark.django_db
+class TestRetrieveCollection:
+    def test_if_collection_exists_return_200(self, api_client):
+        collection = baker.make("store.Collection")
+
+        response = api_client.get(f"/store/collections/{collection.id}/")
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == {
+            "id": collection.id,
+            "title": collection.title,
+            "products_count": 0,
+        }
+
+    def test_if_collection_does_not_exists_return_404(self, api_client):
+        collection = baker.make("store.Collection")
+
+        response = api_client.get(f"/store/collections/{collection.id+1}/")
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        assert response.data == {"detail": "Not found."}

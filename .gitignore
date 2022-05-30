@@ -7,4 +7,9 @@ Pipfile
 db.sqlite3
 doc.txt
 
+
+celerybeat-schedule.db
+
 Media/
+
+pytest.ini
