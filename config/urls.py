@@ -6,6 +6,7 @@ from django.urls import include, path
 admin.site.site_header = "Store Front Admin"
 
 urlpatterns = [
+    path("", include("core.urls")),
     path("admin/", admin.site.urls),
     path("store/", include("store.urls")),
     path("playground/", include("playground.urls")),
