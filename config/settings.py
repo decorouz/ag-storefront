@@ -15,6 +15,8 @@ import sys
 from datetime import timedelta
 from pathlib import Path
 
+from celery.beat import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -188,6 +190,14 @@ DEFAULT_FROM_EMAIL = "from@agdev.com"
 
 # CELERY STUFF
 CELERY_BROKER_URL = "redis://localhost:6379/1"  # 1 is the name of our db
+CELERY_BEAT_SCHEDULE = {
+    "notify_customers": {
+        "task": "playground.tasks.notify_customers",
+        # "schedule" : crontab(day_of_week=1, hour=7, minute=30)
+        "schedule": 5,
+        "args": ["Hello World"],
+    }
+}
 
 
 if "celery" in sys.argv[0]:
