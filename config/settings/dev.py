@@ -32,6 +32,3 @@ EMAIL_HOST = "localhost"
 EMAIL_HOST_USER = ""
 EMAIL_HOST_PASSWORD = ""
 EMAIL_PORT = 2525
-
-if DEBUG:
-    MIDDLEWARE += ["silk.middleware.SilkyMiddleware"]
