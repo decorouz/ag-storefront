@@ -21,6 +21,7 @@ gunicorn = "*"
 dj-database-url = "*"
 django-silk = "*"
 django-debug-toolbar = "*"
+flower = "*"
 
 [dev-packages]
 pytest = "*"
