@@ -11,6 +11,7 @@ doc.txt
 celerybeat-schedule.db
 
 /media/
+/staticfiles/
 /static/
 general.log
 *.pyc
