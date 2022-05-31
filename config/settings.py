@@ -229,36 +229,26 @@ LOGGING = {
         "console": {
             "class": "logging.StreamHandler",
         },
-    },
-    "file": {
-        "class": "logging.FileHandler",
-        "filename": "general.log"
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "general.log",
+            "formatter": "verbose",
+        },
     },
     "loggers": {
-        "django": {
+        "": {
             "handlers": ["console", "file"],
-            "level": os.environ.get("DJANGO_LOG_LEVEL", "INFO")
+            "level": os.environ.get("DJANGO_LOG_LEVEL", "INFO"),
         },
     },
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} ({levelname}) - {module} - {message} {process:d} {thread:d}",
+            "style": "{",
         },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    },
-    'formatters': {
-        'verbose': {
-            'format': '{asctime} ({levelname}) - {name} - {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
         },
     },
-
 }

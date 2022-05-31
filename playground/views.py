@@ -1,10 +1,18 @@
+import logging
+
 import requests
 from django.shortcuts import render
-from django.views.decorators.cache import cache_page
+
+logger = logging.getLogger(__name__)
 
 
-@cache_page(5 * 60)
 def say_hello(request):
-    response = requests.get("https://httpbin.org/delay/2")
-    data = response.json()
+    try:
+
+        logging.info("Calling httpbin")
+        response = requests.get("https://httpbin.org/delay/2")
+        logging.info("Received the response")
+        data = response.json()
+    except requests.ConnectionError:
+        logger.critical("Httpbin is offline")
     return render(request, "hello.html", {"name": data})

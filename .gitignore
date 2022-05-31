@@ -10,6 +10,9 @@ doc.txt
 
 celerybeat-schedule.db
 
-Media/
+/media/
+/static/
+general.log
+*.pyc
 
 pytest.ini
