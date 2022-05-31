@@ -7,9 +7,6 @@ Pipfile
 db.sqlite3
 doc.txt
 
-
-celerybeat-schedule.db
-
 /media/
 /staticfiles/
 /static/
