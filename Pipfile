@@ -18,6 +18,7 @@ celery = "*"
 django-redis = "*"
 whitenoise = "*"
 gunicorn = "*"
+dj-database-url = "*"
 
 [dev-packages]
 pytest = "*"
