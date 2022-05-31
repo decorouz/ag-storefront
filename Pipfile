@@ -22,6 +22,7 @@ dj-database-url = "*"
 django-silk = "*"
 django-debug-toolbar = "*"
 flower = "*"
+python-decouple = "*"
 
 [dev-packages]
 pytest = "*"

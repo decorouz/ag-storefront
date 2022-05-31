@@ -1,17 +1,19 @@
+from decouple import config
+
 from .common import *
 
 DEBUG = True
 
-SECRET_KEY = "django-insecure-_s@(ra(08u=-782u-l%p^o_jf3s-w#f4e#o4^-)tzzn=3#zfoy"
+SECRET_KEY = config("SECRET_KEY")
 
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "storefront",
-        "HOST": "localhost",
-        "USER": "root",
-        "PASSWORD": "1241-Biola",
+        "NAME": config("DB_NAME"),
+        "HOST": config("DB_HOST"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASSWORD"),
     }
 }
 
