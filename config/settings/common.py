@@ -132,7 +132,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -167,9 +167,7 @@ DJOSER = {
 }
 
 
-
 DEFAULT_FROM_EMAIL = "from@agdev.com"
-
 
 
 CELERY_BEAT_SCHEDULE = {
@@ -184,9 +182,6 @@ CELERY_BEAT_SCHEDULE = {
 
 # if "celery" in sys.argv[0]:
 #     DEBUG = False
-
-
-
 
 
 LOGGING = {
